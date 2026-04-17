@@ -7,7 +7,6 @@ Este proyecto contiene una aplicación Django mínima con un formulario de conta
 - `Dockerfile` - imagen de Python 3.11 con Django y `psycopg2-binary`
 - `docker-compose.yml` - servicios `db` (PostgreSQL) y `web` (Django)
 - `.env.example` - ejemplo de variables de entorno para la base de datos
-- `core/` - app Django con vista, formulario y plantilla
 
 ## Cómo ejecutar
 
