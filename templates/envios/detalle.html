@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Detalle de Encomienda</h2>
+
+<p><strong>Código:</strong> {{ encomienda.codigo }}</p>
+<p><strong>Descripción:</strong> {{ encomienda.descripcion }}</p>
+<p><strong>Remitente:</strong> {{ encomienda.remitente }}</p>
+<p><strong>Destinatario:</strong> {{ encomienda.destinatario }}</p>
+<p><strong>Ruta:</strong> {{ encomienda.ruta }}</p>
+
+<hr>
+
+<h3>Estado</h3>
+
+<p>¿Entregada? {{ encomienda.esta_entregada }}</p>
+<p>¿Tiene retraso? {{ encomienda.tiene_retraso }}</p>
+<p>Días en tránsito: {{ encomienda.dias_en_transito }}</p>
+
+<hr>
+
+<h3>Historial</h3>
+
+<ul>
+    {% for h in historial %}
+        <li>{{ h.estado }} - {{ h.fecha }}</li>
+    {% empty %}
+        <li>No hay historial</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

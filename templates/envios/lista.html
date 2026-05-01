@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Lista de Encomiendas</h2>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <a href="{% url 'encomienda_crear' %}" class="btn">+ Nueva Encomienda</a>
+</div>
+
+<div class="search-container">
+    <form method="get" class="search-form">
+        <div class="search-input-group">
+            <input 
+                type="text" 
+                name="q" 
+                placeholder="🔍 Buscar por descripción, código o DNI del remitente..." 
+                value="{{ termino }}"
+                class="search-input"
+            >
+            <button type="submit" class="btn-search">Buscar</button>
+            {% if termino %}
+                <a href="{% url 'encomienda_lista' %}" class="btn-clear">Limpiar</a>
+            {% endif %}
+        </div>
+        {% if termino %}
+            <p class="search-result">Se encontraron <strong>{{ page_obj.paginator.count }}</strong> encomienda(s)</p>
+        {% endif %}
+    </form>
+</div>
+
+<ul class="lista">
+    {% for e in page_obj %}
+        <li class="item">
+            <div class="item-content">
+                <a href="{% url 'encomienda_detalle' e.id %}">{{ e.descripcion }}</a>
+                <small class="item-code">Código: {{ e.codigo }}</small>
+            </div>
+            <span class="info">{{ e.remitente }}</span>
+        </li>
+    {% empty %}
+        <li style="text-align: center; padding: 30px; color: #7f8c8d;">
+            {% if termino %}
+                <p>No se encontraron encomiendas que coincidan con "{{ termino }}"</p>
+            {% else %}
+                <p>No hay encomiendas disponibles</p>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<div style="text-align: center; margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+    {% if page_obj.has_previous %}
+        <a href="?q={{ termino }}&page=1" style="margin-right: 10px; color: #2a5298; text-decoration: none; font-weight: 600;">« Primera</a>
+        <a href="?q={{ termino }}&page={{ page_obj.previous_page_number }}" style="margin-right: 10px; color: #2a5298; text-decoration: none; font-weight: 600;">‹ Anterior</a>
+    {% endif %}
+
+    <span style="color: #7f8c8d; font-weight: 600;">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?q={{ termino }}&page={{ page_obj.next_page_number }}" style="margin-left: 10px; color: #2a5298; text-decoration: none; font-weight: 600;">Siguiente ›</a>
+        <a href="?q={{ termino }}&page={{ page_obj.paginator.num_pages }}" style="margin-left: 10px; color: #2a5298; text-decoration: none; font-weight: 600;">Última »</a>
+    {% endif %}
+</div>
+
+{% endblock %}

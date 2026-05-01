@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="perfil-container">
+    <h2>Mi Perfil</h2>
+    
+    <div class="perfil-card">
+        <div class="perfil-header">
+            <div class="perfil-avatar">👤</div>
+            <div class="perfil-info">
+                <h3>{{ user.get_full_name|default:user.username }}</h3>
+                <p class="perfil-username">@{{ user.username }}</p>
+            </div>
+        </div>
+
+        <div class="perfil-details">
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">{{ user.email|default:"No especificado" }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Nombre Completo:</span>
+                <span class="detail-value">{{ user.get_full_name|default:"No especificado" }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Miembro desde:</span>
+                <span class="detail-value">{{ user.date_joined|date:"d de F de Y" }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Total de Encomiendas:</span>
+                <span class="detail-value">{{ encomiendas_totales }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Estado:</span>
+                <span class="detail-value">
+                    {% if user.is_active %}
+                        <span class="badge-success">Activo</span>
+                    {% else %}
+                        <span class="badge-danger">Inactivo</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="perfil-actions">
+            <a href="{% url 'dashboard' %}" class="btn-primary">Volver al Dashboard</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

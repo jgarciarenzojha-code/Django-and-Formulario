@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Nueva Encomienda</h2>
+
+<div class="form-container">
+    {% if form.non_field_errors %}
+        <div class="alert-error">
+            <strong>Error:</strong>
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_codigo">Código *</label>
+            {{ form.codigo }}
+            {% if form.codigo.errors %}
+                <ul class="errorlist">
+                    {% for error in form.codigo.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <small class="form-help">Formato: ENC-001, ENC-002, etc.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="id_descripcion">Descripción *</label>
+            {{ form.descripcion }}
+            {% if form.descripcion.errors %}
+                <ul class="errorlist">
+                    {% for error in form.descripcion.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_peso">Peso (kg) *</label>
+            {{ form.peso }}
+            {% if form.peso.errors %}
+                <ul class="errorlist">
+                    {% for error in form.peso.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_remitente">Remitente *</label>
+            {{ form.remitente }}
+            {% if form.remitente.errors %}
+                <ul class="errorlist">
+                    {% for error in form.remitente.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_destinatario">Destinatario</label>
+            {{ form.destinatario }}
+            {% if form.destinatario.errors %}
+                <ul class="errorlist">
+                    {% for error in form.destinatario.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_ruta">Ruta *</label>
+            {{ form.ruta }}
+            {% if form.ruta.errors %}
+                <ul class="errorlist">
+                    {% for error in form.ruta.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_fecha_entrega">Fecha de Entrega</label>
+            {{ form.fecha_entrega }}
+            {% if form.fecha_entrega.errors %}
+                <ul class="errorlist">
+                    {% for error in form.fecha_entrega.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <small class="form-help">{{ form.fecha_entrega.help_text }}</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">Guardar Encomienda</button>
+            <a href="{% url 'encomienda_lista' %}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

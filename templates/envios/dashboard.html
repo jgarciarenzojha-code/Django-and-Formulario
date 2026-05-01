@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="dashboard-header">
+    <h1>Bienvenido: <span class="username">{{ user.get_full_name|default:user.username|title }}</span></h1>
+</div>
+
+<div class="dashboard">
+    <div class="card total">
+        <h3>Envíos (hoy)</h3>
+        <p>{{ total }}</p>
+    </div>
+
+    <div class="card pendiente">
+        <h3>Envíos Recepcionados (hoy)</h3>
+        <p>{{ pendientes }}</p>
+    </div>
+
+    <div class="card activa">
+        <h3>Envíos No Recepcionados (hoy)</h3>
+        <p>{{ activas }}</p>
+    </div>
+
+    <div class="card retraso">
+        <h3>Usuarios Registrados</h3>
+        <p>{{ retraso }}</p>
+    </div>
+</div>
+
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{% url 'encomienda_lista' %}" class="btn" style="background-color: #2a5298;">Ver Todas las Encomiendas</a>
+</div>
+
+{% endblock %}
