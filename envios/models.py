@@ -26,6 +26,13 @@ class EncomiendaManager(models.Manager):
         return self.get_queryset().por_ruta(ruta)
 
 
+class EstadoEncomienda(models.TextChoices):
+    PENDIENTE = 'pendiente', 'Pendiente'
+    EN_TRANSITO = 'en_transito', 'En transito'
+    ENTREGADA = 'entregada', 'Entregada'
+    CANCELADA = 'cancelada', 'Cancelada'
+
+
 class Encomienda(models.Model):
     codigo = models.CharField(
         max_length=20,
@@ -57,6 +64,12 @@ class Encomienda(models.Model):
 
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
 
+    estado = models.CharField(
+        max_length=20,
+        choices=EstadoEncomienda.choices,
+        default=EstadoEncomienda.PENDIENTE
+    )
+
     fecha_envio = models.DateTimeField(auto_now_add=True)
 
     fecha_entrega = models.DateTimeField(
@@ -76,7 +89,7 @@ class Encomienda(models.Model):
             if self.remitente == self.destinatario:
                 errors['destinatario'] = "No pueden ser la misma persona"
 
-        if self.fecha_entrega:
+        if self.fecha_entrega and self.estado != EstadoEncomienda.ENTREGADA:
             if self.fecha_entrega < timezone.now():
                 errors['fecha_entrega'] = "No puede ser en el pasado"
 
@@ -110,10 +123,19 @@ class Encomienda(models.Model):
         return self.descripcion[:20]
 
     def cambiar_estado(self, nuevo_estado):
+        if nuevo_estado not in EstadoEncomienda.values:
+            raise ValidationError({'estado': 'Estado de encomienda invalido'})
+
+        self.estado = nuevo_estado
+        if nuevo_estado == EstadoEncomienda.ENTREGADA and not self.fecha_entrega:
+            self.fecha_entrega = timezone.now()
+        self.save(update_fields=['estado', 'fecha_entrega'])
+
         HistorialEstado.objects.create(
             encomienda=self,
             estado=nuevo_estado
         )
+        return self
 
 
     @classmethod
