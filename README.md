@@ -1,145 +1,111 @@
-# Proyecto Django REST Framework - Encomiendas
+# Sistema de Encomiendas con Django REST Framework
 
-API y aplicacion web para gestionar clientes, rutas, empleados y encomiendas. El proyecto esta preparado para ejecutarse con Docker Compose usando Django, Django REST Framework, PostgreSQL y Redis.
+Proyecto Django para gestionar clientes, rutas, empleados y encomiendas. Incluye vistas web y una API REST documentada con Swagger.
 
-## Servicios
+## Tecnologias usadas
 
-- `web`: Django 5.2 + Django REST Framework.
-- `db`: PostgreSQL 15.
-- `redis`: Redis 7 para cache y throttling.
+- Django
+- Django REST Framework
+- PostgreSQL
+- Redis
+- Docker Compose
+- JWT para autenticacion
 
-## Ejecutar con Docker
+## Levantar el proyecto
 
-1. Copiar variables de entorno:
+Copiar el archivo de variables:
 
-   ```bash
-   copy .env.example .env
-   ```
+```bash
+copy .env.example .env
+```
 
-2. Construir y levantar contenedores:
+Construir y levantar los contenedores:
 
-   ```bash
-   docker compose up -d --build
-   ```
+```bash
+docker compose up -d --build
+```
 
-3. Aplicar migraciones:
+Aplicar migraciones:
 
-   ```bash
-   docker compose exec web python manage.py migrate
-   ```
+```bash
+docker compose exec web python manage.py migrate
+```
 
-4. Crear superusuario:
+Crear usuario administrador:
 
-   ```bash
-   docker compose exec web python manage.py createsuperuser
-   ```
+```bash
+docker compose exec web python manage.py createsuperuser
+```
 
-5. Ejecutar pruebas:
+Ejecutar pruebas:
 
-   ```bash
-   docker compose exec web python manage.py test api -v 2
-   ```
+```bash
+docker compose exec web python manage.py test api -v 2
+```
 
-## URLs principales
+## Enlaces
 
 - Aplicacion web: `http://localhost:8000/`
-- Admin Django: `http://localhost:8000/admin/`
-- Swagger/OpenAPI unificado: `http://localhost:8000/api/docs/`
-- Schema OpenAPI unificado: `http://localhost:8000/api/schema/`
+- Admin: `http://localhost:8000/admin/`
+- Swagger: `http://localhost:8000/api/docs/`
+- Schema: `http://localhost:8000/api/schema/`
 
-## Autenticacion JWT
+## Autenticacion
 
-Obtener token:
+Para obtener un token JWT:
 
 ```http
-POST http://localhost:8000/api/v1/auth/token/
-Content-Type: application/json
+POST /api/v1/auth/token/
+```
 
+Body:
+
+```json
 {
-  "username": "renzo",
-  "password": "Soccer123pro"
+  "username": "usuario",
+  "password": "password"
 }
 ```
 
-Usar el token:
+Luego usar el token en Swagger o en las peticiones:
 
 ```http
 Authorization: Bearer ACCESS_TOKEN
 ```
 
-Renovar token:
+## Endpoints principales
 
-```http
-POST http://localhost:8000/api/v1/auth/token/refresh/
-```
+API v1:
 
-## Endpoints API v1
+- `/api/v1/encomiendas/`
+- `/api/v1/clientes/`
+- `/api/v1/rutas/`
+- `/api/v1/empleados/`
+- `/api/v1/encomiendas/pendientes/`
+- `/api/v1/encomiendas/con_retraso/`
+- `/api/v1/encomiendas/estadisticas/`
 
-- `GET/POST /api/v1/encomiendas/`
-- `GET/PATCH/DELETE /api/v1/encomiendas/{id}/`
-- `POST /api/v1/encomiendas/{id}/cambiar_estado/`
-- `GET /api/v1/encomiendas/pendientes/`
-- `GET /api/v1/encomiendas/con_retraso/`
-- `GET /api/v1/encomiendas/estadisticas/`
-- `POST /api/v1/encomiendas/bulk_create/`
-- `PATCH /api/v1/encomiendas/bulk_estado/`
-- `GET/POST /api/v1/clientes/`
-- `GET/POST /api/v1/rutas/`
-- `GET/POST /api/v1/empleados/`
+API v2:
 
-Tambien se incluyen endpoints equivalentes para demostrar FBV, APIView, mixins y generics:
+- `/api/v2/encomiendas/`
+- `/api/v2/clientes/`
+- `/api/v2/rutas/`
+- `/api/v2/empleados/`
 
-- `/api/v1/fbv/encomiendas/`
-- `/api/v1/apiview/encomiendas/`
-- `/api/v1/mixins/encomiendas/`
-- `/api/v1/generics/encomiendas/`
+La version v2 mantiene las rutas principales y cambia la salida de encomiendas agregando el campo `resumen`.
 
-## API v2
+## Funcionalidades implementadas
 
-- `POST /api/v2/auth/token/`
-- `POST /api/v2/auth/token/refresh/`
-- `GET /api/v2/encomiendas/`
-- `GET /api/v2/encomiendas/{id}/`
-- `GET/POST /api/v2/clientes/`
-- `GET/POST /api/v2/rutas/`
-- `GET/POST /api/v2/empleados/`
-- `/api/v2/fbv/encomiendas/`
-- `/api/v2/apiview/encomiendas/`
-- `/api/v2/mixins/encomiendas/`
-- `/api/v2/generics/encomiendas/`
-
-La version v2 expone las mismas familias de endpoints que v1. En encomiendas usa un serializer distinto e incluye el campo `resumen`.
-
-## Checklist del entregable DRF
-
-- DRF instalado y configurado.
-- `EncomiendaSerializer` y `EncomiendaDetailSerializer` con propiedades del modelo.
-- Endpoints FBV para listar y detallar encomiendas.
-- Endpoints CBV con `APIView` para `get`, `post`, `patch` y `delete`.
-- Mixins con `List`, `Create`, `Retrieve`, `Update` y `Destroy`.
-- Generic views con `ListCreateAPIView` y `RetrieveUpdateDestroyAPIView`.
-- `EncomiendaViewSet` con `@action` para `cambiar_estado`.
-- Acciones de lista: `pendientes`, `con_retraso` y `estadisticas`.
-- Router DRF con URLs automaticas.
-- Serializer anidado para objetos relacionados e historial.
-- Paginacion `PageNumberPagination` con `PAGE_SIZE = 15`.
-- Filtros por `estado`, `ruta`, `remitente`, `destinatario` y `con_retraso`.
-- Busqueda y ordenamiento configurados.
-- JWT con obtencion, renovacion y payload personalizado.
-- Permisos `EsEmpleadoActivo` y `EsPropietarioOAdmin`.
-- Validaciones `validate_peso_kg`, `validate_codigo` y `validate`.
-- Swagger unificado en `/api/docs/` y schema en `/api/schema/`.
-- Versionado `/api/v1/` y `/api/v2/`.
-- Tests para list, create, error 400, cambiar estado, bulk, JWT, permisos, paginacion y versionado.
-- Throttling para login y empleados.
-- Exception handler con formato JSON uniforme.
-- CORS habilitado.
-- `to_representation` oculta campos sensibles para usuarios no staff.
-- Bulk create y bulk estado.
-- `select_related` y `prefetch_related` en relaciones.
-- Redis en Docker Compose para cache de estadisticas por 15 minutos.
+- Serializers para clientes, rutas, empleados y encomiendas.
+- Vistas con FBV, APIView, mixins, generics y ViewSets.
+- Router para generar rutas automaticamente.
+- Acciones personalizadas para cambiar estado, listar pendientes, ver retrasos y estadisticas.
+- Paginacion, filtros, busqueda y ordenamiento.
+- Permisos personalizados para empleados activos y propietarios.
+- Versionado con `/api/v1/` y `/api/v2/`.
+- Swagger unificado para probar toda la API.
+- Tests para validar los endpoints principales.
 
 ## Notas
 
-- No subir `.env` al repositorio.
-- Si Docker conserva datos antiguos, las migraciones nuevas se aplican con `docker compose exec web python manage.py migrate`.
+El archivo `.env` no se sube al repositorio. Solo se deja `.env.example` como referencia.
